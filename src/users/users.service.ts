@@ -19,7 +19,6 @@ export class UsersService {
   ) { }
 
   async findAll(res): Promise<users[]> {
-    try {
       const users = await this.USERS_REPOSITORY.findAll<users>({ attributes: ['id', 'email', 'img', 'userBooks'] });
       if (users != []) {
         return res.status(200).send({
@@ -34,16 +33,9 @@ export class UsersService {
         });
 
       }
-    } catch (err) {
-      res.status(500).send({
-        success: false,
-        message: err
-      });
-    }
   }
 
   async findOne(req, res): Promise<users[]> {
-    try {
       const user = await this.USERS_REPOSITORY.findOne<users>({ attributes: ['id', 'email', 'img', 'userBooks'], where: { id: req.params.id } });
       if (user) {
         return res.status(200).send({
@@ -58,16 +50,9 @@ export class UsersService {
         });
 
       }
-    } catch (err) {
-      res.status(500).send({
-        success: false,
-        message: err
-      });
-    }
   }
 
   async addBook(req, res): Promise<users[]> {
-    try {
       const user = await this.USERS_REPOSITORY.findOne<users>({ attributes: ['id', 'email', 'img', 'userBooks'], where: { id: req.params.id } });
 
       const check = await this.USERS_REPOSITORY.findOne<users>({ where: { id: req.params.id } });
@@ -84,21 +69,11 @@ export class UsersService {
           data: null
         });
       }
-    } catch (err) {
-      res.status(500).send({
-        success: false,
-        message: err
-      });
-    }
   }
 
   async deleteUser(req, res): Promise<any> {
-    try {
-      const token: string = req.headers.authorization;
+      const token: string = req.headers.authorization.split(" ")[1];
 
-      if (!token) {
-        return res.status(403).send({ auth: false, message: "No token provided." });
-      }
       const decoded = await jwt.verify(token, 'secret');
       if ((<any>decoded).roles !== 'admin') {
         return res.status(401).send({ auth: false, message: "You are not admin" });
@@ -120,21 +95,11 @@ export class UsersService {
         });
 
       }
-    } catch (err) {
-      res.status(500).send({
-        success: false,
-        message: err
-      });
-    }
   }
 
   async editUser(req, res): Promise<any> {
-    try {
-      const token: string = req.headers.authorization;
+      const token: string = req.headers.authorization.split(" ")[1];
 
-      if (!token) {
-        return res.status(403).send({ auth: false, message: "No token provided." });
-      }
       const decoded = await jwt.verify(token, 'secret');
       if ((<any>decoded).roles !== 'admin') {
         return res.status(401).send({ auth: false, message: "You are not admin" });
@@ -155,16 +120,9 @@ export class UsersService {
           data: null
         });
       }
-    } catch (err) {
-      res.status(500).send({
-        success: false,
-        message: err
-      });
-    }
   }
 
   async changeProfile(req, res): Promise<any> {
-    try {
       const check = await this.USERS_REPOSITORY.findOne<users>({ where: { id: req.params.id } });
 
       if (check) {
@@ -181,12 +139,6 @@ export class UsersService {
         });
 
       }
-    } catch (err) {
-      res.status(500).send({
-        success: false,
-        message: err
-      });
-    }
   }
 
   async registerNewUser(req, res): Promise<any> {
@@ -197,7 +149,6 @@ export class UsersService {
       userBooks: req.body.userBooks
     };
 
-    try {
       const matchUser: any = await this.USERS_REPOSITORY.findOne({ where: { email: newUser.email } })
 
       if (!matchUser) {
@@ -216,12 +167,5 @@ export class UsersService {
         success: false,
         message: `User with E-mail:${matchUser.email} alredy exist!`
       });
-
-    } catch (err) {
-      res.status(500).send({
-        success: false,
-        message: err
-      });
-    }
   }
 }

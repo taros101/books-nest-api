@@ -9,7 +9,6 @@ export class BooksService {
     @Inject('BOOKS_REPOSITORY') private readonly BOOKS_REPOSITORY: typeof Books) { }
 
   async findAll(): Promise<Books[]> {
-    console.log('done');
 
     return await this.BOOKS_REPOSITORY.findAll<Books>();
   }
@@ -22,7 +21,7 @@ export class BooksService {
   async findBooksByTitle(req): Promise<Books[]> {
     const Sequelize = require('sequelize');
     const title = req.params.title
-    console.log(title);
+
     const Op = Sequelize.Op;
     const books = await this.BOOKS_REPOSITORY.findAll<Books>({ where:
        { title: {
@@ -34,7 +33,6 @@ export class BooksService {
 
 
   async postBook(req): Promise<any> {
-    console.log(req.body.title);
     const newBook: any = {
       title: req.body.title,
       author: req.body.author,
