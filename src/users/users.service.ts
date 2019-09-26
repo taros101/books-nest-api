@@ -14,12 +14,12 @@ interface User {
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject('USERS_REPOSITORY') private readonly USERS_REPOSITORY: typeof users,
-    @Inject('ROLES_USERS_REPOSITORY') private readonly ROLES_USERS_REPOSITORY: typeof users_roles,
+    @Inject('userRepository') private readonly userRepository: typeof users,
+    @Inject('rolesUsersRepository') private readonly rolesUsersRepository: typeof users_roles,
   ) { }
 
   async findAll(res): Promise<users[]> {
-      const users = await this.USERS_REPOSITORY.findAll<users>({ attributes: ['id', 'email', 'img', 'userBooks'] });
+      const users = await this.userRepository.findAll<users>({ attributes: ['id', 'email', 'img', 'userBooks'] });
       if (users != []) {
         return res.status(200).send({
           success: true,
@@ -36,7 +36,7 @@ export class UsersService {
   }
 
   async findOne(req, res): Promise<users[]> {
-      const user = await this.USERS_REPOSITORY.findOne<users>({ attributes: ['id', 'email', 'img', 'userBooks'], where: { id: req.params.id } });
+      const user = await this.userRepository.findOne<users>({ attributes: ['id', 'email', 'img', 'userBooks'], where: { id: req.params.id } });
       if (user) {
         return res.status(200).send({
           success: true,
@@ -53,11 +53,11 @@ export class UsersService {
   }
 
   async addBook(req, res): Promise<users[]> {
-      const user = await this.USERS_REPOSITORY.findOne<users>({ attributes: ['id', 'email', 'img', 'userBooks'], where: { id: req.params.id } });
+      const user = await this.userRepository.findOne<users>({ attributes: ['id', 'email', 'img', 'userBooks'], where: { id: req.params.id } });
 
-      const check = await this.USERS_REPOSITORY.findOne<users>({ where: { id: req.params.id } });
+      const check = await this.userRepository.findOne<users>({ where: { id: req.params.id } });
       if (check) {
-        await this.USERS_REPOSITORY.update<users>(req.body, { where: { id: req.params.id } });
+        await this.userRepository.update<users>(req.body, { where: { id: req.params.id } });
         return res.status(200).send({
           success: true,
           message: 'Update is done'
@@ -79,10 +79,10 @@ export class UsersService {
         return res.status(401).send({ auth: false, message: "You are not admin" });
       }
 
-      const check = await this.USERS_REPOSITORY.findOne<users>({ where: { id: req.params.id } });
+      const check = await this.userRepository.findOne<users>({ where: { id: req.params.id } });
 
       if (check) {
-        await this.USERS_REPOSITORY.destroy({ where: { id: req.params.id } });
+        await this.userRepository.destroy({ where: { id: req.params.id } });
         return res.status(200).send({
           success: true,
           message: 'Delete is done'
@@ -105,10 +105,10 @@ export class UsersService {
         return res.status(401).send({ auth: false, message: "You are not admin" });
       }
 
-      const check = await this.USERS_REPOSITORY.findOne<users>({ where: { id: req.params.id } });
+      const check = await this.userRepository.findOne<users>({ where: { id: req.params.id } });
 
       if (check) {
-        await this.USERS_REPOSITORY.update<users>(req.body, { where: { id: req.params.id } });
+        await this.userRepository.update<users>(req.body, { where: { id: req.params.id } });
         return res.status(200).send({
           success: true,
           message: 'Update is done'
@@ -123,10 +123,10 @@ export class UsersService {
   }
 
   async changeProfile(req, res): Promise<any> {
-      const check = await this.USERS_REPOSITORY.findOne<users>({ where: { id: req.params.id } });
+      const check = await this.userRepository.findOne<users>({ where: { id: req.params.id } });
 
       if (check) {
-        const user = await this.USERS_REPOSITORY.update<users>(req.body, { where: { id: req.params.id } });
+        const user = await this.userRepository.update<users>(req.body, { where: { id: req.params.id } });
         return res.status(200).send({
           success: true,
           message: 'Update is done'
@@ -149,16 +149,16 @@ export class UsersService {
       userBooks: req.body.userBooks
     };
 
-      const matchUser: any = await this.USERS_REPOSITORY.findOne({ where: { email: newUser.email } })
+      const matchUser: any = await this.userRepository.findOne({ where: { email: newUser.email } })
 
       if (!matchUser) {
-        await this.USERS_REPOSITORY.create<users>(newUser);
-        const userCurrent = await this.USERS_REPOSITORY.findOne({ where: { email: newUser.email } })
+        await this.userRepository.create<users>(newUser);
+        const userCurrent = await this.userRepository.findOne({ where: { email: newUser.email } })
         const newUserRoles: any = {
           users_id: userCurrent.id,
           roles_id: 222
         }
-        await this.ROLES_USERS_REPOSITORY.create<users_roles>(newUserRoles);
+        await this.rolesUsersRepository.create<users_roles>(newUserRoles);
         res.status(200).send({
           success: true,
           message: "User Successfully created"

@@ -1,5 +1,5 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpStatus, HttpException } from '@nestjs/common';
-import  Environments  from '../config/settings'
+import  Environments  from '../config/config'
 @Catch()
 export class ExceptionHandlerFilter implements ExceptionFilter {
     catch(error: Error, host: ArgumentsHost) {
@@ -12,7 +12,7 @@ export class ExceptionHandlerFilter implements ExceptionFilter {
             return response.status(status).send(error.message);
         }
         if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
-            if (process.env.NODE_ENV == Environments.mongoURL.toString()) {
+            if (process.env.NODE_ENV == Environments.Production.toString()) {
                 var obj = {
                     message: error.message,
                     name: error.name,

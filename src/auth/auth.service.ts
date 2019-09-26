@@ -13,15 +13,16 @@ export class AuthService {
 
   public jwtService: JwtService;
 
-  @Inject('AUTH_REPOSITORY') private readonly AUTH_REPOSITORY: typeof users
+  @Inject('authRepository') private readonly authRepository: typeof users
   
   constructor(config: ConfigService) {
     this.test = config.get('APP');
   }
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user: any = await this.AUTH_REPOSITORY.findOne<users>({ where: { email: email } })
+    const user: any = await this.authRepository.findOne<users>({ where: { email: email } })
     if (!user) {
+      console.log(user)
       throw new HttpException('User not found', 404);
     }
 
@@ -34,7 +35,7 @@ export class AuthService {
   async login(user: any) {
     let permissions: any[] = [];
 
-    await this.AUTH_REPOSITORY.findAll<users>({
+    await this.authRepository.findAll<users>({
       where: { id: user.id },
       include: [{
         model: roles

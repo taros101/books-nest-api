@@ -2,21 +2,21 @@ import { users, roles, users_roles } from './users.entity';
 
 export const usersProviders = [
   {
-    provide: 'USERS_REPOSITORY',
+    provide: 'userRepository',
     useValue: users,
   },
 ];
 
 export const rolesProviders = [
   {
-    provide: 'ROLES_REPOSITORY',
+    provide: 'rolesRepository',
     useValue: roles,
   },
 ];
 
 export const rolesUsersProviders = [
   {
-    provide: 'ROLES_USERS_REPOSITORY',
+    provide: 'rolesUsersRepository',
     useValue: users_roles,
   },
 ];

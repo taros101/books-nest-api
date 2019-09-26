@@ -6,15 +6,15 @@ import { Response } from 'express';
 @Injectable()
 export class BooksService {
   constructor(
-    @Inject('BOOKS_REPOSITORY') private readonly BOOKS_REPOSITORY: typeof Books) { }
+    @Inject('booksRepository') private readonly booksRepository: typeof Books) { }
 
   async findAll(): Promise<Books[]> {
 
-    return await this.BOOKS_REPOSITORY.findAll<Books>();
+    return await this.booksRepository.findAll<Books>();
   }
   async findOne(req): Promise<Books> {
     const id = req.params.id
-    return await this.BOOKS_REPOSITORY.findOne<Books>(id);
+    return await this.booksRepository.findOne<Books>(id);
 
   }
 
@@ -23,7 +23,7 @@ export class BooksService {
     const title = req.params.title
 
     const Op = Sequelize.Op;
-    const books = await this.BOOKS_REPOSITORY.findAll<Books>({ where:
+    const books = await this.booksRepository.findAll<Books>({ where:
        { title: {
         [Op.substring]: `${title}` 
     } } });
@@ -42,7 +42,7 @@ export class BooksService {
     };
 
     if (req.body.title) {
-      await this.BOOKS_REPOSITORY.create<Books>(newBook)
+      await this.booksRepository.create<Books>(newBook)
 
       return new HttpException('Add is done', 201);
 
