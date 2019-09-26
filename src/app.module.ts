@@ -12,11 +12,11 @@ import { usersProviders, rolesProviders, rolesUsersProviders } from './users/use
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { authProviders } from './auth/auth.providers';
-import { LocalStrategy } from './auth/local.strategy';
+import { LocalStrategy } from './common/local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './auth/constants';
-import { JwtStrategy } from './users/jwt.strategy';
+import { jwtConstants } from './common/constants';
+import { JwtStrategy } from './common/jwt.strategy';
 import { ConfigModule } from './config/config.module';
 
 @Module({
